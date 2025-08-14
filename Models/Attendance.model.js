@@ -11,7 +11,7 @@ student: {
 
   teacher: { 
     type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  status: { type: String, enum: ["present", "absent"], default: "present" },
+  status: { type: String, enum: ["present", "absent"], default: "absent" },
   scannedAt:
    {
      type: Date,

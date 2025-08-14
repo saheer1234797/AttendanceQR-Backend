@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 
 const userController = {
@@ -63,6 +64,7 @@ const userController = {
       });
 
       return response.status(200).json({ message: "Login successful", data: user,token });
+
     } catch (error) {
       console.log(error);
       return response.status(500).json({ error: "Internal server error" });
@@ -93,3 +95,9 @@ const userController = {
 };
 
 export default userController;
+
+
+
+
+
+

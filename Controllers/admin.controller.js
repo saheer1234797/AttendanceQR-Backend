@@ -71,7 +71,7 @@ async last7days(request, response) {
 async recentAttendance(request,response){
     try{
 
-        const recentAttendance=await Attendance.find().sort({ scannedAt: -1 }).limit(5).populate("student", "name email").populate("teacher", "name");
+        const recentAttendance=await Attendance.find().sort({ scannedAt: -1 }).populate("student", "name email").populate("teacher", "name");
        return {recentAttendance}
        // return response.status(200).json({message:"get data recent ",data:{recentAttendance}});
 
