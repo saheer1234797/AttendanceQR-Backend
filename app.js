@@ -28,8 +28,8 @@
 // app.use("/qr-codes", express.static(path.join(__dirname, "public", "qr-codes")));
 
 // mongoose.connect(process.env.MONGO_URL).then(result=>{
-//   //  const FRONTEND = 'http://localhost:3001';
-//    const FRONTEND="https://attendanceqr-frontend.onrender.com";
+//  const FRONTEND = 'http://localhost:3001';
+//   //  const FRONTEND="https://attendanceqr-frontend.onrender.com";
 
 
 // app.use(cors({ origin: FRONTEND, credentials: true }));
@@ -86,6 +86,8 @@ import scanQRroute from './Routes/ScanQR.route.js';
 import AttendceRoute from './Routes/Attendace.route.js';
 import adminrouter from './Routes/admin.route.js';
 import contactRoutes from './Routes/contact.route.js';
+import { error } from 'console';
+import { connect } from 'http2';
 
 dotenv.config();
 const app = express();
@@ -95,8 +97,8 @@ const __dirname = dirname(__filename);
 
 
 const FRONTEND = [
-    'http://localhost:3000', 
-    'https://attendanceqr-frontend.onrender.com' 
+    'http://localhost:3001', 
+    // 'https://attendanceqr-frontend.onrender.com' 
 ];
 
 
@@ -141,3 +143,4 @@ mongoose.connect(process.env.MONGO_URL)
     .catch(error => {
         console.error(" Database not connected", error);
     });
+

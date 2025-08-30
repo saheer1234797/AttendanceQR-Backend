@@ -27,3 +27,6 @@ const qrSchema = mongoose.Schema({
 });
 
 export const QR = mongoose.model("QR", qrSchema);
+
+
+

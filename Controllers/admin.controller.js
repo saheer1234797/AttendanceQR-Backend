@@ -117,29 +117,134 @@ export default adminControllerDashboard;
 
 
 
+// export const getAllStudentsWithAttendance = async (req, res) => {
+//   try {
+//     // Get all students
+//     const students = await User.find({ role: "student" })
+//       .select("name email class");
+
+//     // Get attendance records
+//     const attendanceRecords = await Attendance.find({})
+//       .populate("student", "email");
+
+//     // Merge student data with attendance
+//     const finalData = students.map((student) => {
+//       const record = attendanceRecords.find(
+//         (att) => att.student?.email === student.email
+//       );
+
+//       return {
+//         name: student.name,
+//         email: student.email,
+//         class: student.class || "N/A",
+//         date: record ? new Date(record.scannedAt).toLocaleDateString() : "N/A",
+//         record: record ? record.status : "absent", // default absent if no record
+//       };
+//     });
+
+//     res.status(200).json({ data: finalData });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+
+
+// export const getAllStudentsWithAttendance = async (req, res) => {
+//   try {
+//     // Get all students
+//     const students = await User.find({ role: "student" })
+//       .select("name email class");
+
+//     // Get all attendance records
+//     const attendanceRecords = await Attendance.find({})
+//       .populate("student", "email");
+
+//     // Merge student data with all attendance
+//     const finalData = [];
+
+//     students.forEach((student) => {
+//       // उस student के सारे attendance records
+//       const records = attendanceRecords.filter(
+//         (att) => att.student?.email === student.email
+//       );
+
+//       if (records.length > 0) {
+//         records.forEach((rec) => {
+//           finalData.push({
+//             name: student.name,
+//             email: student.email,
+//             class: student.class || "N/A",
+//             date: rec.scannedAt ? new Date(rec.scannedAt).toLocaleDateString() : "N/A",
+//             record: rec.status || "absent",
+//           });
+//         });
+//       } else {
+//         // अगर student का कोई attendance नहीं है तो default absent दिखाओ
+//         finalData.push({
+//           name: student.name,
+//           email: student.email,
+//           class: student.class || "N/A",
+//           date: "N/A",
+//           record: "absent",
+//         });
+//       }
+//     });
+
+//     res.status(200).json({ data: finalData });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+
+
 export const getAllStudentsWithAttendance = async (req, res) => {
   try {
-    // Get all students
+    // all  students
     const students = await User.find({ role: "student" })
       .select("name email class");
 
-    // Get attendance records
+    // all attendance records
     const attendanceRecords = await Attendance.find({})
       .populate("student", "email");
 
-    // Merge student data with attendance
-    const finalData = students.map((student) => {
-      const record = attendanceRecords.find(
-        (att) => att.student?.email === student.email
-      );
+    //  Step 1: min and max data find
+    const allDates = attendanceRecords.map((rec) => rec.scannedAt);
+    const minDate = allDates.length > 0 ? new Date(Math.min(...allDates)) : new Date();
+    const maxDate = new Date(); // now date 
 
-      return {
-        name: student.name,
-        email: student.email,
-        class: student.class || "N/A",
-        date: record ? new Date(record.scannedAt).toLocaleDateString() : "N/A",
-        record: record ? record.status : "absent", // default absent if no record
-      };
+    // make a all renge 
+    const dateRange = [];
+    let d = new Date(minDate);
+    while (d <= maxDate) {
+      dateRange.push(new Date(d));
+      d.setDate(d.getDate() + 1);
+    }
+
+    // stuudent and detae wise attendance marge karo
+    const finalData = [];
+
+    students.forEach((student) => {
+      dateRange.forEach((date) => {
+        const record = attendanceRecords.find(
+          (att) =>
+            att.student?.email === student.email &&
+            new Date(att.scannedAt).toDateString() === date.toDateString()
+        );
+
+        finalData.push({
+          name: student.name,
+          email: student.email,
+          class: student.class || "N/A",
+          date: date.toLocaleDateString(),   // this line for add curenct date 
+          record: record ? record.status : "absent",
+        });
+      });
     });
 
     res.status(200).json({ data: finalData });
@@ -148,8 +253,3 @@ export const getAllStudentsWithAttendance = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-
-
-
