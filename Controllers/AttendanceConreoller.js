@@ -29,13 +29,18 @@ const AttendanceController = {
       const id = req.user.id;
 
       const records = await Attendance.find({ student: id })
-        .populate("teacher", "name email") 
+        .populate("teacher", "name email")
+              .populate("student", "name email class rollNumber") 
         .sort({ scannedAt: -1 });
 
+
+   
       res.status(200).json({
         message: "Attendance fetched successfully",
         data: records
       });
+    
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -62,6 +67,7 @@ console.log("Student ID from token:", studentId);
 
   }
  }
+
 
 
 };

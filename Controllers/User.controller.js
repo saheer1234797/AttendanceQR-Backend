@@ -1,6 +1,3 @@
-
-
-
 import { User } from "../Models/User.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -13,7 +10,10 @@ const userController = {
 
   async register(request, response) {
     try {
-      let { name, email, password, role, rollNumber } = request.body;
+   
+      let { name, email, password, role, rollNumber, class: batch } = request.body;
+      console.log("Register Body:", request.body);
+
 
       if (role === "admin") {
         return response.status(403).json({ message: "You cannot create an admin account" });
@@ -29,8 +29,9 @@ const userController = {
       const salt = await bcrypt.genSalt(12);
       password = await bcrypt.hash(password, salt);
 
-      const user = await User.create({ name, email, password, role, rollNumber });
+      const user = await User.create({ name, email, password, role, rollNumber ,class:batch});
       return response.status(201).json({ message: "Registration successful", data: user });
+
     } catch (error) {
       console.log(error);
       return response.status(500).json({ error: "Internal server error" });

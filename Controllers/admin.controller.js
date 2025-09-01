@@ -73,7 +73,7 @@ async recentAttendance(request,response){
 
         const recentAttendance=await Attendance.find().sort({ scannedAt: -1 }).populate("student", "name email").populate("teacher", "name");
        return {recentAttendance}
-       // return response.status(200).json({message:"get data recent ",data:{recentAttendance}});
+
 
     }catch(error){
         console.log(error);
@@ -85,6 +85,8 @@ async recentAttendance(request,response){
 
 async deshbordAll(request,response){
     try{
+  
+      
 
 const {totalStudents,totalTeachers}=await adminControllerDashboard.getAllteacehrAndStude();
 const {totalAttendace}= await adminControllerDashboard.todaysAttendance();
@@ -92,7 +94,7 @@ const {last7days}=await adminControllerDashboard.last7days();
 const {recentAttendance}=await adminControllerDashboard.recentAttendance();
 
 
-return  response.status(200).json({message:"data  get sucessfull ",data:{totalStudents,totalTeachers,totalAttendace,last7days,recentAttendance}});
+return  response.status(200).json({message:"data saheer  get sucessfull ",data:{totalStudents,totalTeachers,totalAttendace,last7days,recentAttendance}});
     
     }catch(error){
         console.log(error);
@@ -104,9 +106,10 @@ return  response.status(200).json({message:"data  get sucessfull ",data:{totalSt
 
 
 
+
+
+
 }
-
-
 
 
 export default adminControllerDashboard;
@@ -116,109 +119,23 @@ export default adminControllerDashboard;
 
 
 
-
-// export const getAllStudentsWithAttendance = async (req, res) => {
-//   try {
-//     // Get all students
-//     const students = await User.find({ role: "student" })
-//       .select("name email class");
-
-//     // Get attendance records
-//     const attendanceRecords = await Attendance.find({})
-//       .populate("student", "email");
-
-//     // Merge student data with attendance
-//     const finalData = students.map((student) => {
-//       const record = attendanceRecords.find(
-//         (att) => att.student?.email === student.email
-//       );
-
-//       return {
-//         name: student.name,
-//         email: student.email,
-//         class: student.class || "N/A",
-//         date: record ? new Date(record.scannedAt).toLocaleDateString() : "N/A",
-//         record: record ? record.status : "absent", // default absent if no record
-//       };
-//     });
-
-//     res.status(200).json({ data: finalData });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-
-
-
-// export const getAllStudentsWithAttendance = async (req, res) => {
-//   try {
-//     // Get all students
-//     const students = await User.find({ role: "student" })
-//       .select("name email class");
-
-//     // Get all attendance records
-//     const attendanceRecords = await Attendance.find({})
-//       .populate("student", "email");
-
-//     // Merge student data with all attendance
-//     const finalData = [];
-
-//     students.forEach((student) => {
-//       // उस student के सारे attendance records
-//       const records = attendanceRecords.filter(
-//         (att) => att.student?.email === student.email
-//       );
-
-//       if (records.length > 0) {
-//         records.forEach((rec) => {
-//           finalData.push({
-//             name: student.name,
-//             email: student.email,
-//             class: student.class || "N/A",
-//             date: rec.scannedAt ? new Date(rec.scannedAt).toLocaleDateString() : "N/A",
-//             record: rec.status || "absent",
-//           });
-//         });
-//       } else {
-//         // अगर student का कोई attendance नहीं है तो default absent दिखाओ
-//         finalData.push({
-//           name: student.name,
-//           email: student.email,
-//           class: student.class || "N/A",
-//           date: "N/A",
-//           record: "absent",
-//         });
-//       }
-//     });
-
-//     res.status(200).json({ data: finalData });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-
-
-
 export const getAllStudentsWithAttendance = async (req, res) => {
   try {
-    // all  students
-    const students = await User.find({ role: "student" })
-      .select("name email class");
+   //all student 
+    const students = await User.find({ role: "student" }).select("name email class");
 
-    // all attendance records
-    const attendanceRecords = await Attendance.find({})
-      .populate("student", "email");
+    //   all attendance records
+    const attendanceRecords = await Attendance.find({}).populate("student", "email");
 
-    //  Step 1: min and max data find
-    const allDates = attendanceRecords.map((rec) => rec.scannedAt);
+    //  Find min and max dates
+    const allDates = attendanceRecords.map(rec => rec.scannedAt);
     const minDate = allDates.length > 0 ? new Date(Math.min(...allDates)) : new Date();
-    const maxDate = new Date(); // now date 
+    minDate.setHours(0, 0, 0, 0); // start of first day
 
-    // make a all renge 
+    const maxDate = new Date();
+    maxDate.setHours(23, 59, 59, 999); // end of today
+
+    // full date range including today
     const dateRange = [];
     let d = new Date(minDate);
     while (d <= maxDate) {
@@ -226,30 +143,70 @@ export const getAllStudentsWithAttendance = async (req, res) => {
       d.setDate(d.getDate() + 1);
     }
 
-    // stuudent and detae wise attendance marge karo
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    if (!dateRange.some(date => date.toDateString() === today.toDateString())) {
+      dateRange.push(today);
+    }
+
+    //  Merge student + date + attendance
     const finalData = [];
 
-    students.forEach((student) => {
-      dateRange.forEach((date) => {
-        const record = attendanceRecords.find(
-          (att) =>
-            att.student?.email === student.email &&
-            new Date(att.scannedAt).toDateString() === date.toDateString()
-        );
+    students.forEach(student => {
+      dateRange.forEach(date => {
+        const record = attendanceRecords.find(att => {
+          const attDate = new Date(att.scannedAt);
+          return att.student?.email === student.email &&
+                 attDate.toDateString() === date.toDateString();
+        });
 
         finalData.push({
           name: student.name,
           email: student.email,
           class: student.class || "N/A",
-          date: date.toLocaleDateString(),   // this line for add curenct date 
-          record: record ? record.status : "absent",
+          date: date.toLocaleDateString(),
+          record: record ? record.status : "absent", 
         });
       });
     });
 
     res.status(200).json({ data: finalData });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
+
+
+export const todaysAttendanceSummary=async(req, res)=> {
+  try {
+ 
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+   
+    const students = await User.find({ role: "student" });
+
+   
+    const todaysRecords = await Attendance.find({
+      scannedAt: { $gte: todayStart, $lte: todayEnd }
+    }).populate("student", "email");
+
+    const presentCount = todaysRecords.length;
+    const absentCount = students.length - presentCount;
+
+    return res.status(200).json({ presentCount, absentCount });
+  } catch (error) {
+    console.log(error);
+    
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}

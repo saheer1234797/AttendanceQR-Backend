@@ -9,7 +9,6 @@ const auth = async (request, response, next) => {
     const authHeader = request.headers.authorization;
     const token = authHeader?.split(" ")[1]; 
 
-    // console.log("Token from header:", token);
 
     if (!token) {
       return response.status(401).json({ message: "Unauthorized: Token missing" });

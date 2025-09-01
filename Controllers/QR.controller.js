@@ -62,3 +62,5 @@ const generateQRController = {
 };
 
 export default generateQRController;
+
+

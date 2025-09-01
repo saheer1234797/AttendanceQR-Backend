@@ -49,10 +49,7 @@ const scanQrController = {
           return response.status(400).json({ message: 'QR Code has expired' });
         }
 
-        // Check if attendance already marked today for this student and teacher
-        // const today = new Date();
-        // const start = new Date(today.setHours(0, 0, 0, 0));
-        // const end = new Date(today.setHours(23, 59, 59, 999));  //it is working but now testing
+
         const now = new Date();
 const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
@@ -90,3 +87,4 @@ const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 5
 };
 
 export default scanQrController;
+

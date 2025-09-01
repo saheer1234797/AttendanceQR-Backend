@@ -23,7 +23,7 @@ export const sendContactMessage = async (req, res) => {
   
     const mailOptions = {
       from: process.env.EMAIL,
-      to: process.env.EMAIL, // Apne email par receive karne ke liye
+      to: process.env.EMAIL, 
       subject: `New Contact Message from ${name}`,
       html: `
         <h3>New Contact Form Message</h3>
