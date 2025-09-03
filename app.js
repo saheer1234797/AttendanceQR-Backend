@@ -17,6 +17,7 @@ import AttendceRoute from './Routes/Attendace.route.js';
 import adminrouter from './Routes/admin.route.js';
 import contactRoutes from './Routes/contact.route.js';
 import passwordrouter from "./Routes/password.route.js"
+import bulkrouter from "./Routes/BulkStudent.route.js"
 
 
 dotenv.config();
@@ -27,14 +28,14 @@ const __dirname = dirname(__filename);
 
 
 const FRONTEND = [
-    // 'http://localhost:3001', 
-     'https://attendanceqr-frontend.onrender.com' 
+    'http://localhost:3001', 
+    //  'https://attendanceqr-frontend.onrender.com' 
 ];
 
 
 app.use(cors({
-    // origin: FRONTEND,
-    origin:"https://attendanceqr-frontend.onrender.com",
+    origin: FRONTEND,
+    // origin:"https://attendanceqr-frontend.onrender.com",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
@@ -62,6 +63,7 @@ app.use('/scanQR', scanQRroute);
 app.use('/Attendce', AttendceRoute);
 app.use('/admin', adminrouter);
 app.use("/email", contactRoutes);
+app.use("/bulk",bulkrouter );
 
 
 mongoose.connect(process.env.MONGO_URL)
