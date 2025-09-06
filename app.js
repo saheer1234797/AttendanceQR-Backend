@@ -27,16 +27,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-const FRONTEND = [
-    'http://localhost:3001', 
-    //  'https://attendanceqr-frontend.onrender.com' 
+const allowedOrigins = [
+  "http://localhost:3001", 
+  "http://localhost:3000",
+  "https://attendanceqr-frontend.onrender.com"
 ];
 
 
 app.use(cors({
+    origin:function(origin,callback){
+        if(!origin||allowedOrigins.includes(origin)){
+            callback(null,true);
+        }else{
+            callback(new Error("not allowed by cors"));
+        }
+    },
     // origin: FRONTEND,
-    // origin:"https://attendanceqr-frontend.onrender.com",
-    origin:"http://localhost:3001",
+    //  origin:"https://attendanceqr-frontend.onrender.com",
+    // origin:"http://localhost:3001",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));

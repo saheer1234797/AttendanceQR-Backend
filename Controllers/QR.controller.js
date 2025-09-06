@@ -83,6 +83,7 @@ const generateQRController = {
   async generateQR(request, response) {
     try {
       const user = request.user;
+      
 
       if (user.role !== 'teacher') {
         return response.status(403).json({ message: "Only teachers can generate QR codes" });
