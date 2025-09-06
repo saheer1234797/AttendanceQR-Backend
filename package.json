@@ -18,6 +18,7 @@
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
+    "geolib": "^3.3.4",
     "jimp": "^0.16.1",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",

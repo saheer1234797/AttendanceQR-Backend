@@ -24,12 +24,12 @@ return {totalStudents,totalTeachers};
         todayEnd.setHours(23,59,999);
         const todaysAttendance=await Attendance.countDocuments({scannedAt:{$gte:todayStart,$lte:todayEnd},})
         return {todaysAttendance};
-     
+  
     }catch(error){
 
         console.log(error);
         return response.status(500).json({message:"Internal server Error "});
-        
+
     }
    }
 ,

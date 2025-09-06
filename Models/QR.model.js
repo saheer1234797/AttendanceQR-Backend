@@ -23,7 +23,17 @@ const qrSchema = mongoose.Schema({
   { type: Date, 
     required: true 
   },
+
   used: { type: Boolean, default: false }
+,
+
+
+//update code 
+  location: { 
+      latitude: { type: Number, required: true },
+      longitude: { type: Number, required: true },
+      radiusMeters: { type: Number, default: 50 }
+  }
 });
 
 export const QR = mongoose.model("QR", qrSchema);

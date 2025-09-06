@@ -1,4 +1,3 @@
-
 import bcrypt from "bcryptjs";
 import { User } from "../Models/User.model.js";
 
