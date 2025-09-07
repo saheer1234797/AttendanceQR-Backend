@@ -9,44 +9,6 @@ dotenv.config();
 
 const userController = {
 
-  // async register(request, response) {
-  //   try {
-   
-  //     let { name, email, password, role, rollNumber, class: batch } = request.body;
-  //     console.log("Register Body:", request.body);
-
-
-  //     if (role === "admin") {
-  //       return response.status(403).json({ message: "You cannot create an admin account" });
-  //     }
-
-   
-  //     const existingUser = await User.findOne({ email });
-  //     if (existingUser) {
-  //       return response.status(400).json({ message: "User already registered" });
-  //     }
-
-     
-  //     const salt = await bcrypt.genSalt(12);
-  //     password = await bcrypt.hash(password, salt);
-
-  //     const user = await User.create({ name, email, password, role, rollNumber ,class:batch});
-  //     return response.status(201).json({ message: "Registration successful", data: user });
-
-  //   } catch (error) {
-  //     console.log(error);
-  //     return response.status(500).json({ error: "Internal server error" });
-  //   }
-  // },
-
-
-
-
-
-
-
-  
-
   async login(request, response) {
     try {
       let { email, password } = request.body;

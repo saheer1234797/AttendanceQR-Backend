@@ -30,9 +30,18 @@ const qrSchema = mongoose.Schema({
 
 //update code 
   location: { 
-      latitude: { type: Number, required: true },
-      longitude: { type: Number, required: true },
-      radiusMeters: { type: Number, default: 50 }
+      latitude: { 
+        type: Number,
+         required: true 
+        },
+      longitude: {
+         type: Number, 
+         required: true
+         },
+      radiusMeters: { 
+        type: Number,
+         default: 50 
+        }
   }
 });
 

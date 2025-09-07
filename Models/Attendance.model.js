@@ -14,7 +14,10 @@ student: {
    {
      type: Date,
       default: Date.now
-     }
+     },
+
 }, { timestamps: true });
+
+
 
 export const Attendance = mongoose.model("Attendance", AttendanceSchema);
