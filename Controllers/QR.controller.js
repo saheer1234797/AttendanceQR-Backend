@@ -23,7 +23,7 @@ const generateQRController = {
     
       const latitude=22.715272152852528;
       const longitude=75.84408362255719;
-        const radiusMeters =  10;
+        const radiusMeters =  20;
         // const radiusMeters=25000; 
   
    
